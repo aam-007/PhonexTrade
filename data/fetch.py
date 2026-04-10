@@ -126,7 +126,7 @@ def fetch_current_price(symbol: str) -> Optional[float]:
 
         if not hist.empty:
             price = float(hist["Close"].dropna().iloc[-1])
-            print(f"[market_data] ✅ {symbol}: current price fetched (intraday) → {price}")
+            print(f"[market_data]  {symbol}: current price fetched (intraday) → {price}")
             return price
 
         # Fallback to recent daily
@@ -134,14 +134,14 @@ def fetch_current_price(symbol: str) -> Optional[float]:
 
         if not hist.empty:
             price = float(hist["Close"].dropna().iloc[-1])
-            print(f"[market_data] ✅ {symbol}: current price fetched (daily fallback) → {price}")
+            print(f"[market_data]  {symbol}: current price fetched (daily fallback) → {price}")
             return price
 
         # NSE fallback for indices
         if symbol.startswith("^"):
             nse_price = fetch_nse_index_price(symbol)
             if nse_price is not None:
-                print(f"[market_data] ✅ {symbol}: current price fetched (NSE fallback) → {nse_price}")
+                print(f"[market_data]  {symbol}: current price fetched (NSE fallback) → {nse_price}")
                 return nse_price
 
         return None
@@ -181,7 +181,7 @@ def fetch_historical_prices(
 
                 # Use cache only if it's recent (≤1 day old)
                 if age_days <= 1:
-                    print(f"[market_data] ✅ {symbol}: serving {len(series)} data points from cache (age: {age_days}d)")
+                    print(f"[market_data]  {symbol}: serving {len(series)} data points from cache (age: {age_days}d)")
                     return series
 
     try:
@@ -210,7 +210,7 @@ def fetch_historical_prices(
             logger.warning(f"{symbol}: Zero data points after fetch, returning empty")
             return pd.Series(dtype=float)
 
-        print(f"[market_data] ✅ {symbol}: {len(series)} data points fetched successfully ({series.index[0].strftime('%Y-%m-%d')} → {series.index[-1].strftime('%Y-%m-%d')})")
+        print(f"[market_data] {symbol}: {len(series)} data points fetched successfully ({series.index[0].strftime('%Y-%m-%d')} → {series.index[-1].strftime('%Y-%m-%d')})")
 
         series.index = series.index.strftime("%Y-%m-%d")
 
